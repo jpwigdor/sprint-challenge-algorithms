@@ -98,8 +98,39 @@ class SortingRobot:
         """
         Sort the robot's list.
         """
-        # Fill this out
-        pass
+        # Pick up the first item, leaving the `None` marker in its place.
+        self.swap_item()
+
+        while not self.light_is_on():
+
+            # Carry bigger items right. Stop when the rightmost end of the
+            # array is reached.
+            while self.move_right():
+                if self.compare_item() == -1:
+                    self.swap_item()
+
+            # Leave the largest item in the rightmost spot.
+            if self.compare_item() == 1:
+                self.swap_item()
+
+            # Carry smaller items left. Don't pass the `None` marker, as items
+            # to its left, if any, will already be sorted.
+            while self.compare_item() is not None:
+                self.move_left()
+                if self.compare_item() == 1:
+                    self.swap_item()
+
+            # `None` place-marker moves one space right after each round-trip.
+            self.swap_item()
+            self.move_right()
+
+            # When the `None` mark reaches the end, the list is sorted. Until
+            # then, it needs to be swapped back into the list to mark the
+            # lefthand turnaround point.
+            if self.can_move_right():
+                self.swap_item()
+            else:
+                self.set_light_on()
 
 
 if __name__ == "__main__":
